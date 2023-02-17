@@ -5,13 +5,12 @@ const fs = require("fs");
 
 inquirer
     .prompt([
-    // ---- title ----
+    // ---- title and description ----
         {
             type: "input",
             message: "--- TITLE ---\nWhat is your project title?",
             name: "title"
-        },
-    // ---- description ---
+        },    
         // BRANCHING POINT: DESCRIPTION
         {
             type: "list",
@@ -22,14 +21,14 @@ inquirer
                 // BRANCH A: GUIDED
         {
             type: "editor",
-            message: "Save the document and close the editor to submit custom description. ",
+            message: "Use default text editor to write custom description. Save and close editor to submit. ",
             name: "descTextLong",
             when: (answers) => answers.descGuidedOrScratch === "Guided"
         },
                 // BRANCH B: FROM SCRATCH
         {
             type: "input",
-            message: "Answer these questions in 1-2 sentences.\nWhat problem does your project solve, if any?",
+            message: "Answer these questions in 1-2 sentences.\nWhat problem does your project intend to solve, if any?",
             name: "descProblem",
             when: (answers) => answers.descGuidedOrScratch === "From scratch"
         },
@@ -71,9 +70,16 @@ inquirer
     // ---- credits ----
         {
             type: "list",
-            message: "--- CREDITS ---\nDid you collaborate with anyone for this project?",
+            message: "--- CREDITS ---\nWould you like to add a Credits section?",
             choices: ["Yes", "No"],
-            name: "credCollabYesNo"
+            name: "createCreditsYesNo"
+        },
+        {
+            type: "list",
+            message: "Did you collaborate with anyone for this project?",
+            choices: ["Yes", "No"],
+            name: "credCollabYesNo",
+            when: (answers) => answers.createCreditsYesNo === "Yes"
         },
         {
             type: "editor",
@@ -118,7 +124,7 @@ inquirer
             type: "list",
             message: "Would you like to add a How To Contribute section?",
             choices: ["Yes", "No"],
-            name: "addContributeSection"
+            name: "createContributeSectionYesNo"
         },
         {
             type: "editor",
