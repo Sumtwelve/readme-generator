@@ -3,6 +3,12 @@ const generateMarkdown = require("./utils/generateMarkdown.js");
 const inquirer = require("inquirer");
 const fs = require("fs");
 
+// Welcome the user to the software
+console.log("Welcome to Sumtwelve's README generator!");
+console.log("Follow the steps to have a concise, professional README in just minutes.");
+console.log("Let's start with your title.");
+
+
 inquirer
     .prompt([
     // ---- title and description ----
@@ -23,26 +29,26 @@ inquirer
             type: "editor",
             message: "Use default text editor to write custom description. Save and close editor to submit. ",
             name: "descTextLong",
-            when: (answers) => answers.descGuidedOrScratch === "Guided"
+            when: (answers) => answers.descGuidedOrScratch === "From scratch"
         },
                 // BRANCH B: FROM SCRATCH
         {
             type: "input",
             message: "Answer these questions in 1-2 sentences.\nWhat problem does your project intend to solve, if any?",
             name: "descProblem",
-            when: (answers) => answers.descGuidedOrScratch === "From scratch"
+            when: (answers) => answers.descGuidedOrScratch === "Guided"
         },
         {
             type: "input",
             message: "How does it solve that problem?",
             name: "descHowSolveProblem",
-            when: (answers) => answers.descGuidedOrScratch === "From scratch"
+            when: (answers) => answers.descGuidedOrScratch === "Guided"
         },
         {
             type: "input",
             message: "What did you learn from creating this project?",
             name: "descWhatLearned",
-            when: (answers) => answers.descGuidedOrScratch === "From scratch"
+            when: (answers) => answers.descGuidedOrScratch === "Guided"
         },
         // DESCRIPTION BRANCHING POINT OVER
 
@@ -57,7 +63,7 @@ inquirer
             type: "editor",
             message: "What does the user need to do to install the application? Save the document and exit the editor to submit. ",
             name: "instGuideText",
-            when: (answers) => answers.createInstGuideYesNo === "yes"
+            when: (answers) => answers.createInstGuideYesNo === "Yes"
         },
 
     // ---- usage ----
@@ -91,7 +97,8 @@ inquirer
             type: "list",
             message: "Did you use any third-pary assets that require attribution?",
             choices: ["Yes", "No"],
-            name: "credUsedThirdPartyAssets"
+            name: "credUsedThirdPartyAssets",
+            when: (answers) => answers.createCreditsYesNo === "Yes"
         },
         {
             type: "editor",
@@ -103,12 +110,14 @@ inquirer
             type: "list",
             message: "Did you follow any tutorials you'd like to mention in your README?",
             choices: ["Yes", "No"],
-            name: "credUsedTutorials"
+            name: "credUsedTutorials",
+            when: (answers) => answers.createCreditsYesNo === "Yes"
         },
         {
             type: "editor",
             message: "Use default text editor to mention the tutorials. Please place one title and one URL on each line. Save and exit editor to submit. ",
-            name: "credTutorialAttributions"
+            name: "credTutorialAttributions",
+            when: (answers) => answers.credUsedTutorials === "Yes"
         },
 
     // ---- license ----
@@ -130,7 +139,7 @@ inquirer
             type: "editor",
             message: "Use default text editor to briefly describe how users may contribute to your project. Save and exit editor to submit. ",
             name: "howToContributeText",
-            when: (answers) => answers.addContributeSection === "Yes"
+            when: (answers) => answers.createContributeSectionYesNo === "Yes"
         },
 
     // ---- tests ----
@@ -138,12 +147,13 @@ inquirer
             type: "list",
             message: "Would you like to add a Tests section?",
             choices: ["Yes", "No"],
-            name: "addTestsSection"
+            name: "createTestsSectionYesNo"
         },
         {
             type: "editor",
             message: "Use default text editor to describe how users may apply tests to your code. Save and exit editor to submit. ",
-            name: "testsText"
+            name: "testsText",
+            when: (answers) => answers.createTestsSectionYesNo === "Yes"
         },
 
     // ---- table of contents ----
@@ -151,9 +161,15 @@ inquirer
             type: "list",
             message: "Would you like to add a Table of Contents to your README?",
             choices: ["Yes", "No"],
-            name: "addTOC"
+            name: "createTOCYesNo"
         }
     ])
     .then((answers) => {
-        fs.writeFile("README.md", generateMarkdown(answers), ((err) => err ? console.err(err) : console.log("README.md successfully written!")));
-    })
+        // Completed README will be stored in the /generated/ folder. If that folder doesn't exist, program will create it.
+        if (!fs.existsSync("./generated/")) {
+            fs.mkdirSync("./generated/");
+        }
+
+        // Write the file
+        fs.writeFile("./generated/README.md", generateMarkdown(answers), ((err) => err ? console.error(err) : console.log("README.md successfully written!")));
+    });
