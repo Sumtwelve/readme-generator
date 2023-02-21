@@ -46,7 +46,7 @@ inquirer
         },
         {
             type: "input",
-            message: "What did you learn from creating this project?",
+            message: "Describe what you learned from working on this project?",
             name: "descWhatLearned",
             when: (answers) => answers.descGuidedOrScratch === "Guided"
         },

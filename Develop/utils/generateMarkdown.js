@@ -6,7 +6,7 @@ function renderLicenseBadge(license) {
     // Note that the Shields IO format is LABEL-MESSAGE-COLOR.
     // For licenses, LABEL should always be "license".
     // Since user was not given the opportunity to customize badge color, Shields IO's default green is chosen.
-    return `![a small badge indicating the ${license} license](${encodeURIComponent(`https://img.shields.io/badge/license-${license}-green`)})`;
+    return `![a small badge indicating the ${license} license](https://img.shields.io/badge/license-${encodeURIComponent(license)}-green)`;
   }
 
   return "";
@@ -25,10 +25,10 @@ function renderLicenseSection(license) {
 }
 
 function generateTOC(sections) {
-  let toc = `## Table of Contents\n`;
+  let toc = `## Table of Contents\n\n`;
   for (let section of sections) {
     let link = generateTOCLink(section);
-    toc += link + "\n";
+    toc += link + "\n\n";
   }
   return toc;
 }
@@ -53,8 +53,14 @@ function generateMarkdown(data) {
 
   // If an inquirer prompt was not shown to the user, its data when referenced will print "undefined".
   // To fix this, loop through the data and set any "undefined" elements to an empty string instead.
+  console.log("ELEMENTS OF DATA:")
   for (let element of Object.values(data)) {
-    if (element === undefined) element = "";
+    console.log(element);
+    if (element == "undefined") {
+      console.log(`${element} you say??`);
+      element = "";
+      console.log(`element now: ${element}`);
+    }
   }
 
   // These variables were created here. You will not find them in the inquirer prompts.
@@ -116,8 +122,11 @@ function generateMarkdown(data) {
   return `${renderLicenseBadge(data.license)}
 
 # ${data.title}
+
 ${data.descTextLong}**The problem:** ${data.descProblem}
+
 **The solution:** ${data.descHowSolveProblem}
+
 ${data.descWhatLearned}
 
 ${toc}
@@ -142,7 +151,10 @@ ${data.howToContributeText}
 
 ${data.testsTitleText}
 ${data.testsText}
-`.replaceAll("undefined", "");
+`.replaceAll("undefined", "").replaceAll("\n\n\n\n\n", "").replaceAll("\n\n\n", "\n\n");
 }
+
+// I know that last line there looks dumb, but it works.
+// It erases huge newline gaps and then nicely formats all lines to be 2 newlines apart.
 
 module.exports = generateMarkdown;
