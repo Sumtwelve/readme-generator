@@ -44,24 +44,10 @@ function generateTOCLink(sectionName) {
 
 // TODO: Create a function to generate markdown for README
 function generateMarkdown(data) {
-  console.log("We have made it to the generateMarkdown() function");
-
-  // Variable initialization
-  // The user can elect to include or omit certain sections.
+  // VARIABLE INITIALIZATION
+  // Explanation: The user can elect to include or omit certain sections.
   // In cases of omission, a blank string will be printed into the README.
   // Note that some README sections are not presented as optional, such as title, usage, and license.
-
-  // If an inquirer prompt was not shown to the user, its data when referenced will print "undefined".
-  // To fix this, loop through the data and set any "undefined" elements to an empty string instead.
-  console.log("ELEMENTS OF DATA:")
-  for (let element of Object.values(data)) {
-    console.log(element);
-    if (element == "undefined") {
-      console.log(`${element} you say??`);
-      element = "";
-      console.log(`element now: ${element}`);
-    }
-  }
 
   // These variables were created here. You will not find them in the inquirer prompts.
   // I prefixed them with "data" because it just made more sense for these variables to blend in with the ones from inquirer.
