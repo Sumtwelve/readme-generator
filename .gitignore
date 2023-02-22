@@ -1,4 +1,4 @@
 node_modules
-package-lock.json
+inquirer questions.txt
 .vscode
 .DS_Store
