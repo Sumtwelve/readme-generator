@@ -8,7 +8,10 @@ console.log("Welcome to Sumtwelve's README generator!");
 console.log("Follow the steps to have a concise, professional README in just minutes.");
 console.log("Let's start with your title.");
 
-
+// NOTE ON THE INQUIRER:
+// I make frequent use of the "when" property here. "When" takes in a conditional statement (which must be inside an arrow function)
+// and causes the prompt to show only when that statement evaluates to true. This is used to allow the user to fully customize
+// the README.
 inquirer
     .prompt([
     // ---- title and description ----
@@ -24,14 +27,12 @@ inquirer
             choices: ["Guided", "From scratch"],
             name: "descGuidedOrScratch"
         },
-                // BRANCH A: GUIDED
         {
             type: "editor",
             message: "Use default text editor to write custom description. Save and close editor to submit. ",
             name: "descTextLong",
             when: (answers) => answers.descGuidedOrScratch === "From scratch"
         },
-                // BRANCH B: FROM SCRATCH
         {
             type: "input",
             message: "Answer these questions in 1-2 sentences.\nWhat problem does your project intend to solve, if any?",
@@ -50,7 +51,6 @@ inquirer
             name: "descWhatLearned",
             when: (answers) => answers.descGuidedOrScratch === "Guided"
         },
-        // DESCRIPTION BRANCHING POINT OVER
 
     // ---- installation ----
         {

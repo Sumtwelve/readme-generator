@@ -12,18 +12,8 @@ function renderLicenseBadge(license) {
   return "";
 }
 
-// TODO: Create a function that returns the license link for the README's ToC
-// If there is no license, return an empty string
-function renderLicenseLink(license) {
-
-}
-
-// TODO: Create a function that returns the license section of README
-// If there is no license, return an empty string
-function renderLicenseSection(license) {
-  
-}
-
+// A function to generate the entire Table of Contents
+// Parameter "sections" is an array containing the titles of all sections user has elected to include in the README.
 function generateTOC(sections) {
   let toc = `## Table of Contents\n\n`;
   for (let section of sections) {
@@ -33,6 +23,9 @@ function generateTOC(sections) {
   return toc;
 }
 
+// A function to take a section's title and format it for in-document markdown links.
+// It simply takes a string, lowercases it, turns all spaces into hyphens,
+// then turns it into markdown link format: [Link Text](#link-location)
 function generateTOCLink(sectionName) {
   if (sectionName) {
     let hyphenated = sectionName.toLowerCase().replaceAll(" ", "-");
@@ -42,7 +35,7 @@ function generateTOCLink(sectionName) {
   }
 }
 
-// TODO: Create a function to generate markdown for README
+// A function to generate the entire README using the answers from the inquirer (referred to as object "data")
 function generateMarkdown(data) {
   // VARIABLE INITIALIZATION
   // Explanation: The user can elect to include or omit certain sections.
@@ -139,8 +132,9 @@ ${data.testsTitleText}
 ${data.testsText}
 `.replaceAll("undefined", "").replaceAll("\n\n\n\n\n", "").replaceAll("\n\n\n", "\n\n");
 }
-
 // I know that last line there looks dumb, but it works.
 // It erases huge newline gaps and then nicely formats all lines to be 2 newlines apart.
+// I've discovered that markdown does not actually show huge newline gaps when rendered,
+// but they are still visible in the actual md file and I think it looks bad.
 
 module.exports = generateMarkdown;
