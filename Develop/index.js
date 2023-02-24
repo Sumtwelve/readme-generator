@@ -1,4 +1,3 @@
-// TODO: Include packages needed for this application
 const generateMarkdown = require("./utils/generateMarkdown.js");
 const inquirer = require("inquirer");
 const fs = require("fs");
@@ -170,6 +169,44 @@ inquirer
             fs.mkdirSync("./generated/");
         }
 
-        // Write the file
-        fs.writeFile("./generated/README.md", generateMarkdown(answers), ((err) => err ? console.error(err) : console.log("README.md successfully written!")));
+        // I only want to write one fs.writeFile() function, so we're going to create a variable to hold the file name,
+        // change it if needed (see large comment block below), then pass that variable into the write function.
+        let newReadmeFileName = "README";
+
+        // If a previous README was left inside the generated folder, ask user how to proceed.
+        if (fs.existsSync("./generated/README.md")) {
+            inquirer
+                .prompt(
+                    {
+                        type: "list",
+                        message: "WARNING: README.md already exists. Overwrite?",
+                        choices: ["Yes", "No"],
+                        name: "overwriteYesNo"
+                    }
+                )
+                .then((answer) => {
+                    if (answer.overwriteYesNo == "No") {
+                        // Instead of overwriting, user wants us to save README next to already existing one.
+                        // So we need to give it a new name that has a number based on how many READMEs exist in the folder.
+                        // For example, if this new README is the second in the folder, it will be called "README_1.md".
+                        // We therefore need to count how many files in the folder have names starting with "README".
+                        // We can do this easily with FS:
+                        let readmeCount = 0;
+                        let generatedFiles = fs.readdirSync("./generated/", (err) => {if (err) console.error(err)});
+                        for (let fileName of generatedFiles) {
+                            if (fileName.includes("README"))
+                                readmeCount++;
+                        }
+
+                        newReadmeFileName = `README_${readmeCount}`;
+                    }
+                });
+        }
+
+        // Write the README file.
+        // Pass in file name
+        fs.writeFile(`./generated/${newReadmeFileName}.md`,
+            generateMarkdown(answers),
+            ((err) => err ? console.error(err) : console.log(`${newReadmeFileName}.md successfully written!`)));
+        
     });

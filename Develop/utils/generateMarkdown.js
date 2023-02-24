@@ -130,10 +130,11 @@ ${data.howToContributeText}
 
 ${data.testsTitleText}
 ${data.testsText}
-`.replaceAll("undefined", "").replaceAll("\n\n\n\n\n", "").replaceAll("\n\n\n", "\n\n");
+`.replaceAll("undefined", "").replaceAll("\n\n\n\n\n", "").replaceAll("\n\n\n", "\n\n").trim();
 }
 // I know that last line there looks dumb, but it works.
 // It erases huge newline gaps and then nicely formats all lines to be 2 newlines apart.
+// (Then it gets rid of any extra newlines still hanging onto the end.)
 // I've discovered that markdown does not actually show huge newline gaps when rendered,
 // but they are still visible in the actual md file and I think it looks bad.
 
