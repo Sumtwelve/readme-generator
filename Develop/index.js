@@ -200,13 +200,19 @@ inquirer
 
                         newReadmeFileName = `README_${readmeCount}`;
                     }
+
+                    fs.writeFileSync(`./generated/${newReadmeFileName}.md`,
+                        generateMarkdown(answers),
+                        ((err) => err ? console.error(err) : console.log(`${newReadmeFileName}.md successfully written!`)));
+
                 });
+        } else {
+            // Write the README file.
+            fs.writeFileSync(`./generated/${newReadmeFileName}.md`,
+                generateMarkdown(answers),
+                ((err) => err ? console.error(err) : console.log(`${newReadmeFileName}.md successfully written!`)));
         }
 
-        // Write the README file.
-        // Pass in file name
-        fs.writeFile(`./generated/${newReadmeFileName}.md`,
-            generateMarkdown(answers),
-            ((err) => err ? console.error(err) : console.log(`${newReadmeFileName}.md successfully written!`)));
+        
         
     });
