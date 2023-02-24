@@ -5,7 +5,8 @@ const fs = require("fs");
 // Welcome the user to the software
 console.log("Welcome to Sumtwelve's README generator!");
 console.log("Follow the steps to have a concise, professional README in just minutes.");
-console.log("Let's start with your title.");
+console.log("TIP: This program understands markdown. Feel free to include markdown formatting in any of your responses.");
+console.log("\nLet's start with your title.");
 
 // NOTE ON THE INQUIRER:
 // I make frequent use of the "when" property here. "When" takes in a conditional statement (which must be inside an arrow function)
@@ -164,55 +165,33 @@ inquirer
         }
     ])
     .then((answers) => {
-        // Completed README will be stored in the /generated/ folder. If that folder doesn't exist, program will create it.
+        // Completed README will be stored in the `generated/` folder. If that folder doesn't exist, program will create it.
         if (!fs.existsSync("./generated/")) {
             fs.mkdirSync("./generated/");
         }
-
-        // I only want to write one fs.writeFile() function, so we're going to create a variable to hold the file name,
-        // change it if needed (see large comment block below), then pass that variable into the write function.
-        let newReadmeFileName = "README";
-
-        // If a previous README was left inside the generated folder, ask user how to proceed.
-        if (fs.existsSync("./generated/README.md")) {
-            inquirer
-                .prompt(
-                    {
-                        type: "list",
-                        message: "WARNING: README.md already exists. Overwrite?",
-                        choices: ["Yes", "No"],
-                        name: "overwriteYesNo"
-                    }
-                )
-                .then((answer) => {
-                    if (answer.overwriteYesNo == "No") {
-                        // Instead of overwriting, user wants us to save README next to already existing one.
-                        // So we need to give it a new name that has a number based on how many READMEs exist in the folder.
-                        // For example, if this new README is the second in the folder, it will be called "README_1.md".
-                        // We therefore need to count how many files in the folder have names starting with "README".
-                        // We can do this easily with FS:
-                        let readmeCount = 0;
-                        let generatedFiles = fs.readdirSync("./generated/", (err) => {if (err) console.error(err)});
-                        for (let fileName of generatedFiles) {
-                            if (fileName.includes("README"))
-                                readmeCount++;
-                        }
-
-                        newReadmeFileName = `README_${readmeCount}`;
-                    }
-
-                    fs.writeFileSync(`./generated/${newReadmeFileName}.md`,
-                        generateMarkdown(answers),
-                        ((err) => err ? console.error(err) : console.log(`${newReadmeFileName}.md successfully written!`)));
-
-                });
-        } else {
-            // Write the README file.
-            fs.writeFileSync(`./generated/${newReadmeFileName}.md`,
-                generateMarkdown(answers),
-                ((err) => err ? console.error(err) : console.log(`${newReadmeFileName}.md successfully written!`)));
+        
+        // If there is already a README in the `generated/` folder, then this new one needs a unique name
+        // so that the old one doesn't get overwritten. The simplest way to make a unique name is to add a number after it.
+        // We'll get that number from the number of READMEs that already exist in the folder.
+        // For example, if there's just one README already in the folder, this new README will be called "README_2.md".
+        // We therefore need to count how many files in the folder have names starting with "README".
+        let newReadmeFileName = "README"; // default; this will be the filename if there are zero READMEs already in `generated/`
+        let readmeCount = 0;
+        let generatedFiles = fs.readdirSync("./generated/", (err) => {if (err) console.error(err)});
+        for (let fileName of generatedFiles) {
+            if (fileName.includes(".md"))
+                readmeCount++;
         }
 
-        
+        if (readmeCount > 0) {
+            // Adding 1 to the readmeCount here will give the file a proper ordinal number.
+            newReadmeFileName = `README_${readmeCount + 1}`;
+        }
+
+        fs.writeFile(
+            `./generated/${newReadmeFileName}.md`,
+            generateMarkdown(answers),
+            ((err) => err ? console.error(err) : console.log(`${newReadmeFileName}.md successfully written!`))
+        );
         
     });

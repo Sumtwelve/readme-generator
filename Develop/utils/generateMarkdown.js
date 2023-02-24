@@ -6,7 +6,7 @@ function renderLicenseBadge(license) {
     // Note that the Shields IO format is LABEL-MESSAGE-COLOR.
     // For licenses, LABEL should always be "license".
     // Since user was not given the opportunity to customize badge color, Shields IO's default green is chosen.
-    return `![a small badge indicating the ${license} license](https://img.shields.io/badge/license-${encodeURIComponent(license)}-green)`;
+    return `![a small badge indicating the \"${license}\" license](https://img.shields.io/badge/license-${encodeURIComponent(license)}-green)`;
   }
 
   return "";
@@ -20,16 +20,16 @@ function generateTOC(sections) {
     let link = generateTOCLink(section);
     toc += link + "\n\n";
   }
-  return toc;
+  return `${toc}---\n\n---\n\n`;
 }
 
 // A function to take a section's title and format it for in-document markdown links.
 // It simply takes a string, lowercases it, turns all spaces into hyphens,
-// then turns it into markdown link format: [Link Text](#link-location)
+// then turns it into markdown link format: → [Link Text](#link-location)
 function generateTOCLink(sectionName) {
   if (sectionName) {
     let hyphenated = sectionName.toLowerCase().replaceAll(" ", "-");
-    return `[${sectionName}](#${hyphenated})`;
+    return `→ [${sectionName}](#${hyphenated})`;
   } else {
     return "";
   }
@@ -68,7 +68,7 @@ function generateMarkdown(data) {
 
   // ---- credits
   if (data.createCreditsYesNo === "Yes") {
-    data.credTitleText = "## Credits";
+    data.credTitleText = "---\n\n## Credits";
   } else {
     sections.splice(sections.indexOf("Credits"), 1);
   }
@@ -78,21 +78,21 @@ function generateMarkdown(data) {
 
   // ---- how to contribute
   if (data.createContributeSectionYesNo === "Yes") {
-    data.contributeTitleText == "## How to Contribute";
+    data.contributeTitleText = "---\n\n## How to Contribute";
   } else {
     sections.splice(sections.indexOf("How to Contribute"), 1);
   }
 
   // ---- tests
   if (data.createTestsSectionYesNo === "Yes") {
-    data.testsTitleText = "## Tests";
+    data.testsTitleText = "---\n\n## Tests";
   } else {
     sections.splice(sections.indexOf("Tests"), 1);
   }
 
   // create table of contents
   if (data.createTOCYesNo === "Yes") {
-    data.tocTitleText = "## Table of Contents";
+    data.tocTitleText = "---\n\n## Table of Contents";
     toc = generateTOC(sections);
   }
 
@@ -113,6 +113,8 @@ ${toc}
 ${data.instTitleText}
 ${data.instGuideText}
 
+---
+
 ## Usage
 ${data.usageGuideText}
 
@@ -121,6 +123,8 @@ ${data.credCollabHeader}
 ${data.credCollaborators}
 ${data.credTutorialHeader}
 ${data.credTutorialAttributions}
+
+---
 
 ## License
 ${data.license}
@@ -136,6 +140,6 @@ ${data.testsText}
 // It erases huge newline gaps and then nicely formats all lines to be 2 newlines apart.
 // (Then it gets rid of any extra newlines still hanging onto the end.)
 // I've discovered that markdown does not actually show huge newline gaps when rendered,
-// but they are still visible in the actual md file and I think it looks bad.
+// but they are still visible in the actual `.md` file and I think it looks bad.
 
 module.exports = generateMarkdown;
