@@ -27,7 +27,7 @@ Working on this project gave me some needed familiarity with the Markdown format
 ## Installation
 Follow these steps to install the README Generator:
 
-(You can also watch [this video](#) (coming soon) for a visual tutorial)
+(You can also watch [this video](https://youtu.be/cCDswyCVI3o) for a visual tutorial)
 
 1. Make sure you have [Node.js](https://nodejs.org/en/) and the latest build of NPM installed.
 2. Clone this repository (or fork it if you want to make contributions).
