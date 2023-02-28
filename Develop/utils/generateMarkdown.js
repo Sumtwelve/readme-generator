@@ -63,7 +63,7 @@ function generateMarkdown(data) {
   if (data.createInstGuideYesNo === "Yes") {
     data.instTitleText = "## Installation";
   } else {
-    sections.splice(sections.indexOf("Installations"), 1);
+    sections.splice(sections.indexOf("Installation"), 1);
   }
 
   // ---- credits
